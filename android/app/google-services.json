@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "567422956914",
+    "project_id": "spotcart-d21b193f",
+    "storage_bucket": "spotcart-d21b193f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:567422956914:android:a82acaac0d995f42a759eb",
+        "android_client_info": {
+          "package_name": "com.spotcart.spotcart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4cVpL1ARajKEnrOmy1nQMpxI8jbniXr0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

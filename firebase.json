@@ -1,0 +1,26 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "spotcart-d21b193f",
+          "appId": "1:567422956914:android:a82acaac0d995f42a759eb",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "spotcart-d21b193f",
+          "configurations": {
+            "android": "1:567422956914:android:a82acaac0d995f42a759eb",
+            "web": "1:567422956914:web:c9b40a19dfe67adba759eb"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
+}
