@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'theme.dart';
 import 'features/auth/controllers/auth_controller.dart';
 import 'features/auth/presentation/role_selection_screen.dart';
+import 'features/auth/presentation/login_screen.dart';
 import 'features/hub/presentation/prototype_hub.dart';
 import 'features/customer/presentation/customer_navigation_shell.dart';
 import 'features/vendor/presentation/vendor_navigation_shell.dart';
@@ -93,8 +94,8 @@ class AuthGate extends ConsumerWidget {
       }
     }
 
-    // Default entrypoint for presenter is the PrototypeHub launcher!
-    return const PrototypeHub();
+    // Default entrypoint starts directly on the Login Screen!
+    return const LoginScreen();
   }
 }
 

@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../auth/controllers/auth_controller.dart';
 import '../../../theme.dart';
 
+import 'admin_queries_screen.dart';
+import '../../profile/presentation/profile_screen.dart';
+
 class AdminNavigationShell extends ConsumerStatefulWidget {
   const AdminNavigationShell({super.key});
 
@@ -19,10 +22,10 @@ class _AdminNavigationShellState extends ConsumerState<AdminNavigationShell> {
     super.initState();
     _screens = [
       const AdminDashboardTab(),
+      const AdminQueriesTab(),
       const AdminVerificationTab(),
       const AdminReportsTab(),
-      const AdminLeaderboardTab(),
-      const AdminSettingsTab(),
+      const SharedProfileScreen(role: 'admin'),
     ];
   }
 
@@ -47,29 +50,29 @@ class _AdminNavigationShellState extends ConsumerState<AdminNavigationShell> {
         unselectedLabelStyle: const TextStyle(fontSize: 11),
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.analytics_outlined),
-            activeIcon: Icon(Icons.analytics),
+            icon: Icon(Icons.dashboard_outlined),
+            activeIcon: Icon(Icons.dashboard),
             label: 'Overview',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.rule_outlined),
-            activeIcon: Icon(Icons.rule),
+            icon: Icon(Icons.support_agent_outlined),
+            activeIcon: Icon(Icons.support_agent),
+            label: 'Queries',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.verified_user_outlined),
+            activeIcon: Icon(Icons.verified_user),
             label: 'Approvals',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.report_problem_outlined),
             activeIcon: Icon(Icons.report_problem),
-            label: 'Reports',
+            label: 'Flags',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.emoji_events_outlined),
-            activeIcon: Icon(Icons.emoji_events),
-            label: 'Rankings',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.admin_panel_settings_outlined),
-            activeIcon: Icon(Icons.admin_panel_settings),
-            label: 'Control',
+            icon: Icon(Icons.person_outline),
+            activeIcon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
       ),
