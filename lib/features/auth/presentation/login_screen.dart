@@ -50,12 +50,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         return;
       }
 
-      String phone = _phoneController.text.trim();
+      String rawPhone = _phoneController.text.trim().replaceAll(' ', '');
+      String phone = rawPhone;
       if (!phone.startsWith('+')) {
         final offset = DateTime.now().timeZoneOffset.inMinutes;
-        String countryCode = '+1'; // Default
-        if (offset == 330) {
-          countryCode = '+91'; // India
+        String countryCode = '+91'; // Default India (+91)
+        if (offset != 330 && offset != 0) {
+          countryCode = '+91';
         }
         
         if (phone.startsWith('0')) {
@@ -63,6 +64,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         }
         phone = '$countryCode$phone';
       }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('📱 Sending 6-digit SMS OTP verification code to $phone...'),
+          backgroundColor: AppTheme.primaryOrange,
+          duration: const Duration(seconds: 4),
+        ),
+      );
+
       ref.read(authControllerProvider.notifier).sendOTP(phone);
     }
   }
