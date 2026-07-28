@@ -1,0 +1,47 @@
+{
+  "project_name": "SpotCart Mobile Application",
+  "test_environment": "Android Emulator / Appium Mobile Driver",
+  "app_package": "com.example.spotcart",
+  "app_activity": ".MainActivity",
+  "platform_name": "Android",
+  "automation_name": "UiAutomator2",
+  "test_datasets": {
+    "customer_login": {
+      "phone_number": "+91 98401 22334",
+      "otp_code": "123456",
+      "full_name": "Priya Sundaram",
+      "email_id": "priya.sundaram@spotcart.io",
+      "city": "Chennai"
+    },
+    "vendor_login": {
+      "phone_number": "+91 97910 88776",
+      "otp_code": "123456",
+      "vendor_name": "Ramu's Evening Bajji Stall",
+      "fssai_license": "FSSAI-23321008000142",
+      "city": "Chennai",
+      "geo_location": {
+        "latitude": 13.0472,
+        "longitude": 80.2824
+      }
+    },
+    "admin_login": {
+      "passcode": "admin123",
+      "admin_name": "SpotCart Operations Control",
+      "admin_email": "admin.control@spotcart.io"
+    },
+    "query_tickets": [
+      {
+        "id": "TICK-8021",
+        "sender": "Priya Sundaram",
+        "role": "Customer",
+        "issue": "Cart location calibration dispute"
+      },
+      {
+        "id": "TICK-7994",
+        "sender": "Ramu K.",
+        "role": "Vendor",
+        "issue": "New menu combo item approval"
+      }
+    ]
+  }
+}
