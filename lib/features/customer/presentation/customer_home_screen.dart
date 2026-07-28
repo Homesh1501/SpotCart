@@ -5,6 +5,8 @@ import '../../map/controllers/map_controller.dart';
 import '../../../theme.dart';
 import '../../../models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../auth/controllers/auth_controller.dart';
+
 
 class CustomerHomeScreen extends ConsumerStatefulWidget {
   final VoidCallback onMapToggle;
@@ -108,12 +110,19 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // HEADER
+              // HEADER WITH BACK BUTTON & LOCATION
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back, color: isDark ? Colors.white : Colors.black87),
+                      tooltip: 'Back to Hub / Role Selection',
+                      onPressed: () {
+                        ref.read(authControllerProvider.notifier).changeRole();
+                      },
+                    ),
+                    const SizedBox(width: 4),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,7 +136,7 @@ class _CustomerHomeScreenState extends ConsumerState<CustomerHomeScreen> {
                               letterSpacing: 1.2,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 2),
                           Row(
                             children: [
                               const Icon(Icons.location_on, size: 16, color: AppTheme.primaryOrange),
