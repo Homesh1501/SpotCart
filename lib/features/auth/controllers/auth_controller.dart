@@ -219,6 +219,35 @@ class AuthController extends StateNotifier<AuthControllerState> {
     }
   }
 
+  Future<void> updateUserProfile({
+    required String name,
+    required String phoneNumber,
+    String? email,
+    String? password,
+    String? city,
+  }) async {
+    final user = state.user ?? UserModel(id: 'user_${DateTime.now().millisecondsSinceEpoch}', phoneNumber: phoneNumber);
+    state = state.copyWith(status: AuthStatus.loading);
+    try {
+      final updatedUser = user.copyWith(
+        name: name,
+        phoneNumber: phoneNumber,
+        email: email,
+        password: password,
+        city: city,
+      );
+      await _repository.saveUserData(updatedUser);
+      if (!mounted) return;
+      state = state.copyWith(status: AuthStatus.authenticated, user: updatedUser);
+    } catch (e) {
+      if (!mounted) return;
+      state = state.copyWith(
+        status: AuthStatus.error,
+        errorMessage: 'Failed to update user profile: $e',
+      );
+    }
+  }
+
   void changeRole() {
     state = state.copyWith(status: AuthStatus.onboardingRequired);
   }

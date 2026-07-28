@@ -3,8 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserModel {
   final String id;
   final String phoneNumber;
-  final String? role; // 'vendor' or 'customer'
+  final String? role; // 'vendor' or 'customer' or 'admin'
   final String? name;
+  final String? email; // User ID / Email
+  final String? password; // Security PIN / Password
+  final String? city;
   
   // Vendor specific fields
   final bool? isOnline;
@@ -16,6 +19,9 @@ class UserModel {
     required this.phoneNumber,
     this.role,
     this.name,
+    this.email,
+    this.password,
+    this.city,
     this.isOnline,
     this.location,
     this.lastUpdated,
@@ -26,6 +32,9 @@ class UserModel {
     String? phoneNumber,
     String? role,
     String? name,
+    String? email,
+    String? password,
+    String? city,
     bool? isOnline,
     GeoPoint? location,
     DateTime? lastUpdated,
@@ -35,6 +44,9 @@ class UserModel {
       phoneNumber: phoneNumber ?? this.phoneNumber,
       role: role ?? this.role,
       name: name ?? this.name,
+      email: email ?? this.email,
+      password: password ?? this.password,
+      city: city ?? this.city,
       isOnline: isOnline ?? this.isOnline,
       location: location ?? this.location,
       lastUpdated: lastUpdated ?? this.lastUpdated,
@@ -47,6 +59,9 @@ class UserModel {
       'phoneNumber': phoneNumber,
       'role': role,
       'name': name,
+      'email': email,
+      'password': password,
+      'city': city,
       'isOnline': isOnline,
       'location': location,
       'lastUpdated': lastUpdated != null ? Timestamp.fromDate(lastUpdated!) : null,
@@ -60,6 +75,9 @@ class UserModel {
       phoneNumber: map['phoneNumber'] ?? '',
       role: map['role'],
       name: map['name'],
+      email: map['email'],
+      password: map['password'],
+      city: map['city'],
       isOnline: map['isOnline'],
       location: map['location'] as GeoPoint?,
       lastUpdated: lastUpdatedTimestamp?.toDate(),
