@@ -326,7 +326,7 @@ async function seedDatabase() {
   console.log(`   • ${menuItems.length} menu items`);
   console.log("════════════════════════════════════════");
   console.log("\n🔗 View in console: https://console.firebase.google.com/project/spotcart-d21b193f/firestore/databases/-default-/data");
-  
+
   process.exit(0);
 }
 
