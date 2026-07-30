@@ -1,0 +1,105 @@
+name: SpotCart Live GitHub Pages CI/CD & E2E Testing Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+  # -------------------------------------------------------------
+  # STAGE 1: BUILD & DEPLOY TO GITHUB PAGES
+  # -------------------------------------------------------------
+  build-and-deploy:
+    name: Build & Deploy Application to GitHub Pages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Stage 1: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Stage 2: Setup Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Stage 3: Install Flutter Dependencies & Build Web Release
+        run: |
+          flutter pub get
+          flutter build web --release --base-href "/SpotCart/"
+
+      - name: Stage 4: Setup GitHub Pages Deployment
+        uses: actions/configure-pages@v5
+
+      - name: Stage 5: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'build/web'
+
+      - name: Stage 6: Deploy to Live GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  # -------------------------------------------------------------
+  # STAGE 2: LIVE DEPLOYMENT VERIFICATION & AUTOMATED E2E TESTING
+  # -------------------------------------------------------------
+  live-testing-and-reports:
+    name: Execute E2E & Multi-Report Testing Suite Against Live Deployment
+    needs: build-and-deploy
+    runs-on: ubuntu-latest
+    env:
+      BASE_URL: https://Homesh1501.github.io/SpotCart/
+    steps:
+      - name: Stage 1: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Stage 2: Setup Python Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+          cache-dependency-path: 'automation/requirements.txt'
+
+      - name: Stage 3: Install Automation & Reporting Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install openpyxl selenium webdriver-manager
+
+      - name: Stage 4: Execute Live Deployment Verification & Master Test Suite (4 Reports / 1,200 Tests)
+        run: |
+          python automation/run_all_tests.py
+
+      - name: Stage 5: Upload All 4 Excel & HTML Testing Artifacts (30-Day Retention)
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: SpotCart-CI-CD-Test-Reports-Pack
+          path: |
+            automation/reports/Selenium_E2E_Test_Report.xlsx
+            automation/reports/Appium_Mobile_Test_Report.xlsx
+            automation/reports/Vulnerability_Security_Test_Report.xlsx
+            automation/reports/Load_Performance_Test_Report.xlsx
+            automation/reports/execution-report.html
+            automation/reports/summary.md
+            Selenium_E2E_Test_Report.xlsx
+            Appium_Mobile_Test_Report.xlsx
+            Vulnerability_Security_Test_Report.xlsx
+            Load_Performance_Test_Report.xlsx
+          retention-days: 30
+
+      - name: Stage 6: Publish GitHub Actions Step Execution Summary
+        if: always()
+        run: |
+          if [ -f "automation/reports/summary.md" ]; then
+            cat automation/reports/summary.md >> $GITHUB_STEP_SUMMARY
+          fi
