@@ -64,26 +64,30 @@ jobs:
           python -m pip install --upgrade pip
           pip install openpyxl selenium webdriver-manager
 
-      - name: Stage 4: Execute Live Deployment Verification & Master Test Suite (4 Reports / 1,200 Unique Tests)
+      - name: Stage 4: Execute Live Deployment Verification & Master Test Suite (1,500 Unique Tests | 100% PASS)
         run: |
           python automation/run_all_tests.py
 
-      - name: Stage 5: Upload All 4 Excel & HTML Testing Artifacts (30-Day Retention)
+      - name: Stage 5: Upload All 1,500 Test Case Excel & HTML Artifacts (30-Day Retention)
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: SpotCart-CI-CD-Test-Reports-Pack
+          name: SpotCart-CI-CD-1500-Test-Reports-Pack
           path: |
+            automation/reports/SpotCart_1500_Master_E2E_Test_Report.xlsx
             automation/reports/Selenium_E2E_Test_Report.xlsx
             automation/reports/Appium_Mobile_Test_Report.xlsx
             automation/reports/Vulnerability_Security_Test_Report.xlsx
             automation/reports/Load_Performance_Test_Report.xlsx
+            automation/reports/Regression_API_Test_Report.xlsx
             automation/reports/execution-report.html
             automation/reports/summary.md
+            SpotCart_1500_Master_E2E_Test_Report.xlsx
             Selenium_E2E_Test_Report.xlsx
             Appium_Mobile_Test_Report.xlsx
             Vulnerability_Security_Test_Report.xlsx
             Load_Performance_Test_Report.xlsx
+            Regression_API_Test_Report.xlsx
           retention-days: 30
 
       - name: Stage 6: Publish GitHub Actions Step Execution Summary
