@@ -148,14 +148,15 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
 
       // Save Name, Email/ID, and Password credentials
       final currentUser = ref.read(authControllerProvider).user;
-      if (currentUser != null) {
-        ref.read(authControllerProvider.notifier).updateUserProfile(
-          name: name.isNotEmpty ? name : (currentUser.name ?? 'SpotCart User'),
-          phoneNumber: currentUser.phoneNumber,
-          email: email.isNotEmpty ? email : currentUser.email,
-          password: password.isNotEmpty ? password : currentUser.password,
-        );
-      }
+      final userPhone = currentUser?.phoneNumber ?? '+91 98401 22334';
+      final userRole = currentUser?.role ?? 'customer';
+
+      await ref.read(authControllerProvider.notifier).updateUserProfile(
+        name: name.isNotEmpty ? name : (currentUser?.name ?? 'SpotCart User'),
+        phoneNumber: userPhone,
+        email: email.isNotEmpty ? email : currentUser?.email,
+        password: password.isNotEmpty ? password : currentUser?.password,
+      );
     }
   }
 

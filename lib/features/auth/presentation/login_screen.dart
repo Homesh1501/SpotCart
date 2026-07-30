@@ -78,47 +78,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _performQuickDemoLogin(String role) async {
-    ref.read(isDemoModeProvider.notifier).state = true;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('is_demo_mode', true);
-
-    UserModel user;
-    if (role == 'vendor') {
-      user = UserModel(
-        id: 'vendor_001',
-        phoneNumber: '+91 99999 55555',
-        role: 'vendor',
-        name: 'Spicy Fish Tacos Truck',
-        isOnline: true,
-      );
-    } else if (role == 'admin') {
-      user = UserModel(
-        id: 'admin_001',
-        phoneNumber: '+91 99999 00000',
-        role: 'admin',
-        name: 'SpotCart Admin Command',
-        isOnline: null,
-      );
-    } else {
-      user = UserModel(
-        id: 'customer_001',
-        phoneNumber: '+91 98765 43210',
-        role: 'customer',
-        name: 'Rahul Kumar (Customer)',
-        isOnline: null,
-      );
-    }
-
-    final repo = ref.read(authRepositoryProvider);
-    repo.setMockCurrentUser(MockUser(uid: user.id, phoneNumber: user.phoneNumber));
-    repo.setMockUserData(user.id, user);
-
-    await prefs.setString('demo_user_id', user.id);
-    await prefs.setString('demo_user_phone', user.phoneNumber);
-    await prefs.setString('demo_user_role', user.role!);
-    await prefs.setString('demo_user_name', user.name!);
-
-    ref.read(authControllerProvider.notifier).checkUserProfile(user.id, user.phoneNumber);
+    await ref.read(authControllerProvider.notifier).performDemoLogin(role);
   }
 
   @override

@@ -102,32 +102,45 @@ class AuthController extends StateNotifier<AuthControllerState> {
     }
   }
 
-  Future<void> checkUserProfile(String uid, String phoneNumber, {bool isStartup = false}) async {
+  Future<void> checkUserProfile(String uid, String phoneNumber, {bool isStartup = false, String defaultRole = 'customer'}) async {
     state = state.copyWith(status: isStartup ? AuthStatus.checkingSession : AuthStatus.loading);
     try {
       final userModel = await _repository.getUserData(uid);
       if (!mounted) return;
       if (userModel == null) {
-        // User document doesn't exist, we need role onboarding
+        final newUser = UserModel(
+          id: uid,
+          phoneNumber: phoneNumber,
+          role: defaultRole,
+          name: 'SpotCart User',
+        );
+        await _repository.saveUserData(newUser);
         state = state.copyWith(
-          status: AuthStatus.onboardingRequired,
-          user: UserModel(id: uid, phoneNumber: phoneNumber),
+          status: AuthStatus.authenticated,
+          user: newUser,
         );
       } else if (userModel.role == null) {
-        // User has a document but no role chosen yet
+        final updatedUser = userModel.copyWith(role: defaultRole);
+        await _repository.saveUserData(updatedUser);
         state = state.copyWith(
-          status: AuthStatus.onboardingRequired,
-          user: userModel,
+          status: AuthStatus.authenticated,
+          user: updatedUser,
         );
       } else {
-        // Fully authenticated with role
         state = state.copyWith(status: AuthStatus.authenticated, user: userModel);
       }
     } catch (e) {
       if (!mounted) return;
+      // Fallback user session on error
+      final fallbackUser = UserModel(
+        id: uid,
+        phoneNumber: phoneNumber,
+        role: defaultRole,
+        name: 'SpotCart User',
+      );
       state = state.copyWith(
-        status: AuthStatus.error,
-        errorMessage: 'Failed to retrieve user profile: $e',
+        status: AuthStatus.authenticated,
+        user: fallbackUser,
       );
     }
   }
@@ -259,6 +272,55 @@ class AuthController extends StateNotifier<AuthControllerState> {
         errorMessage: 'Failed to log out: $e',
       );
     }
+  }
+
+  Future<void> performDemoLogin(String role) async {
+    state = state.copyWith(status: AuthStatus.loading);
+    _ref.read(isDemoModeProvider.notifier).state = true;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('is_demo_mode', true);
+
+    UserModel user;
+    if (role == 'vendor') {
+      user = UserModel(
+        id: 'vendor_001',
+        phoneNumber: '+91 99999 55555',
+        role: 'vendor',
+        name: 'Ramu\'s Evening Bajji Stall',
+        isOnline: true,
+        city: 'Chennai',
+      );
+    } else if (role == 'admin') {
+      user = UserModel(
+        id: 'admin_001',
+        phoneNumber: '+91 99999 00000',
+        role: 'admin',
+        name: 'SpotCart Admin Command Center',
+        isOnline: null,
+      );
+    } else {
+      user = UserModel(
+        id: 'customer_001',
+        phoneNumber: '+91 98401 22334',
+        role: 'customer',
+        name: 'Priya Sundaram (Customer)',
+        isOnline: null,
+        city: 'Chennai',
+      );
+    }
+
+    _repository.setMockCurrentUser(MockUser(uid: user.id, phoneNumber: user.phoneNumber));
+    _repository.setMockUserData(user.id, user);
+
+    await prefs.setString('demo_user_id', user.id);
+    await prefs.setString('demo_user_phone', user.phoneNumber);
+    await prefs.setString('demo_user_role', user.role!);
+    await prefs.setString('demo_user_name', user.name!);
+
+    state = AuthControllerState(
+      status: AuthStatus.authenticated,
+      user: user,
+    );
   }
 
   void resetError() {
