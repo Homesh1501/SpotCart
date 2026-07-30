@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../auth/controllers/auth_controller.dart';
 import '../../dashboard/presentation/vendor_dashboard.dart';
 import '../../dashboard/presentation/menu_manager_screen.dart';
 import '../../profile/presentation/profile_screen.dart';

@@ -5,7 +5,6 @@ import 'theme.dart';
 import 'features/auth/controllers/auth_controller.dart';
 import 'features/auth/presentation/role_selection_screen.dart';
 import 'features/auth/presentation/login_screen.dart';
-import 'features/hub/presentation/prototype_hub.dart';
 import 'features/customer/presentation/customer_navigation_shell.dart';
 import 'features/vendor/presentation/vendor_navigation_shell.dart';
 import 'features/admin/presentation/admin_navigation_shell.dart';
