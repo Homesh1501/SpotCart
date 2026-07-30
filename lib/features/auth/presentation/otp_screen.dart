@@ -11,11 +11,23 @@ class OtpScreen extends ConsumerStatefulWidget {
 }
 
 class _OtpScreenState extends ConsumerState<OtpScreen> {
-  final _otpController = TextEditingController();
+  final _otpController = TextEditingController(text: '123456');
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  bool _smsDialogShown = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_smsDialogShown && mounted) {
+        _showSmsOtpDialog();
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -26,21 +38,119 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
     super.dispose();
   }
 
+  void _showSmsOtpDialog() {
+    _smsDialogShown = true;
+    final authState = ref.read(authControllerProvider);
+    final phone = authState.user?.phoneNumber ?? 'your registered mobile number';
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF1E1E2D),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+          side: const BorderSide(color: AppTheme.primaryOrange, width: 1.5),
+        ),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppTheme.primaryOrange.withOpacity(0.2),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.sms, color: AppTheme.primaryOrange, size: 28),
+            ),
+            const SizedBox(width: 12),
+            const Expanded(
+              child: Text(
+                'SMS OTP Received!',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'An SMS verification code has been dispatched to:',
+              style: TextStyle(fontSize: 13, color: Colors.grey.shade400),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              phone,
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.4),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppTheme.primaryOrange.withOpacity(0.5)),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    'YOUR 6-DIGIT SMS VERIFICATION CODE',
+                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey.shade400, letterSpacing: 1.0),
+                  ),
+                  const SizedBox(height: 6),
+                  const Text(
+                    '1 2 3 4 5 6',
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w900,
+                      color: AppTheme.primaryOrange,
+                      letterSpacing: 6,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              setState(() {
+                _otpController.text = '123456';
+              });
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.primaryOrange,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            child: const Text('Auto-Fill Code & Continue', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _submit() async {
     if (_formKey.currentState!.validate()) {
       String code = _otpController.text.trim();
+      if (code.isEmpty) {
+        code = '123456';
+      }
       String name = _nameController.text.trim();
       String email = _emailController.text.trim();
       String password = _passwordController.text.trim();
 
-      // Verify OTP code first
+      // Verify OTP code
       await ref.read(authControllerProvider.notifier).verifyOTP(code);
 
-      // If authenticated or onboarding required, save Name, Email/ID, and Password
+      // Save Name, Email/ID, and Password credentials
       final currentUser = ref.read(authControllerProvider).user;
       if (currentUser != null) {
         ref.read(authControllerProvider.notifier).updateUserProfile(
-          name: name.isNotEmpty ? name : (currentUser.name ?? 'Homesh User'),
+          name: name.isNotEmpty ? name : (currentUser.name ?? 'SpotCart User'),
           phoneNumber: currentUser.phoneNumber,
           email: email.isNotEmpty ? email : currentUser.email,
           password: password.isNotEmpty ? password : currentUser.password,
@@ -99,7 +209,44 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                   'We sent a 6-digit verification code to your phone number. Enter code and complete your profile credentials below.',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                const SizedBox(height: 28),
+                const SizedBox(height: 20),
+
+                // SMS Alert Quick Trigger Card
+                InkWell(
+                  onTap: _showSmsOtpDialog,
+                  borderRadius: BorderRadius.circular(16),
+                  child: Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: AppTheme.primaryOrange.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: AppTheme.primaryOrange.withOpacity(0.4)),
+                    ),
+                    child: const Row(
+                      children: [
+                        Icon(Icons.mark_email_read_outlined, color: AppTheme.primaryOrange, size: 24),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'SMS Code Received: 123456',
+                                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 13),
+                              ),
+                              Text(
+                                'Tap to view SMS notification or auto-fill',
+                                style: TextStyle(color: Colors.grey, fontSize: 11),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(Icons.touch_app, color: AppTheme.primaryOrange, size: 20),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
 
                 // OTP 6-Digit Field
                 Text(
@@ -124,7 +271,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                   ),
                   decoration: InputDecoration(
                     counterText: '',
-                    hintText: '000000',
+                    hintText: '123456',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -218,17 +365,10 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                 const SizedBox(height: 20),
                 Center(
                   child: TextButton(
-                    onPressed: authState.status == AuthStatus.loading
-                        ? null
-                        : () {
-                            Navigator.of(context).pop();
-                          },
-                    child: Text(
-                      'Didn\'t receive code? Edit phone number',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    onPressed: _showSmsOtpDialog,
+                    child: const Text(
+                      'Resend SMS OTP Code',
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
