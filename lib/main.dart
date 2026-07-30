@@ -9,6 +9,7 @@ import 'features/hub/presentation/prototype_hub.dart';
 import 'features/customer/presentation/customer_navigation_shell.dart';
 import 'features/vendor/presentation/vendor_navigation_shell.dart';
 import 'features/admin/presentation/admin_navigation_shell.dart';
+import 'features/landing/presentation/landing_3d_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -94,8 +95,8 @@ class AuthGate extends ConsumerWidget {
       }
     }
 
-    // Default entrypoint starts directly on the Login Screen!
-    return const LoginScreen();
+    // Step 1: Default entrypoint opens the 3D Interactive Showcase Landing Screen!
+    return const Landing3DScreen();
   }
 }
 

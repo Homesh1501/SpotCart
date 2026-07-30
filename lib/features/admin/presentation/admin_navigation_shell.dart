@@ -230,7 +230,7 @@ class _AdminVerificationTabState extends State<AdminVerificationTab> {
     MockApplication(
       id: '1',
       name: 'Ramu\'s Evening Bajji Stall',
-      fssaiLicense: 'FSSAI-23321008000142',
+      spotRegId: 'SPOT-TN-8021 (Marina Ward 12)',
       city: 'Chennai',
       ownerName: 'Ramu K.',
       submittedDate: '1 day ago',
@@ -238,7 +238,7 @@ class _AdminVerificationTabState extends State<AdminVerificationTab> {
     MockApplication(
       id: '2',
       name: 'Madurai Kari Dosai Cart',
-      fssaiLicense: 'FSSAI-12219001000958',
+      spotRegId: 'SPOT-MDU-4052 (Meenakshi Gate)',
       city: 'Madurai',
       ownerName: 'Subramanian M.',
       submittedDate: '2 days ago',
@@ -246,7 +246,7 @@ class _AdminVerificationTabState extends State<AdminVerificationTab> {
     MockApplication(
       id: '3',
       name: 'Ooty Varkey Tea Corner',
-      fssaiLicense: 'FSSAI-22020005001140',
+      spotRegId: 'SPOT-CBE-1194 (Gandhipuram Spot)',
       city: 'Coimbatore',
       ownerName: 'Ganesh Pillai',
       submittedDate: '3 days ago',
@@ -317,7 +317,7 @@ class _AdminVerificationTabState extends State<AdminVerificationTab> {
                         ),
                         const SizedBox(height: 12),
                         _buildDetailRow('Owner', app.ownerName),
-                        _buildDetailRow('FSSAI Reg', app.fssaiLicense),
+                        _buildDetailRow('Spot Reg ID', app.spotRegId),
                         _buildDetailRow('Submitted', app.submittedDate),
                         const SizedBox(height: 20),
                         Row(
@@ -370,7 +370,7 @@ class _AdminVerificationTabState extends State<AdminVerificationTab> {
 class MockApplication {
   final String id;
   final String name;
-  final String fssaiLicense;
+  final String spotRegId;
   final String city;
   final String ownerName;
   final String submittedDate;
@@ -378,7 +378,7 @@ class MockApplication {
   MockApplication({
     required this.id,
     required this.name,
-    required this.fssaiLicense,
+    required this.spotRegId,
     required this.city,
     required this.ownerName,
     required this.submittedDate,

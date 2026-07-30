@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// Riverpod provider for dynamic theme switching
-final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.light);
+// Riverpod provider for dynamic theme switching (Default: Dark Mode)
+final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.dark);
 
 class AppTheme {
   // Premium Colors
