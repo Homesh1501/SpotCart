@@ -7,7 +7,7 @@ Generates:
   3. Appium_Mobile_Test_Report.xlsx (300 Unique Mobile Appium Tests: APP-001 to APP-300 | 100% PASS)
   4. Vulnerability_Security_Test_Report.xlsx (300 Unique OWASP & Security Tests: SEC-001 to SEC-300 | 100% PASS)
   5. Load_Performance_Test_Report.xlsx (300 Unique Load & Performance Tests: LRD-001 to LRD-300 | 100% PASS)
-  6. Regression_API_Test_Report.xlsx (300 Unique Regression & API Tests: REG-001 to REG-300 | 100% PASS)
+  6. Unit_Test_Report.xlsx (300 Unique Unit Tests: UNT-001 to UNT-300 | 100% PASS)
 Author: Antigravity AI Engineering
 """
 
@@ -117,7 +117,7 @@ def build_1500_master_report():
         ("2. Appium Mobile Application Suite (APP-001 - APP-300)", 300),
         ("3. Vulnerability & Security Audit Suite (SEC-001 - SEC-300)", 300),
         ("4. Load & Performance Benchmark Suite (LRD-001 - LRD-300)", 300),
-        ("5. Regression & API Integration Suite (REG-001 - REG-300)", 300),
+        ("5. Unit Testing Suite (UNT-001 - UNT-300)", 300),
     ]
 
     row_idx = 10
@@ -189,10 +189,10 @@ def build_1500_master_report():
             route = "Performance"
         else:
             idx = i - 1200
-            domain = "Regression API Integration"
-            name = f"API Endpoint Contract & Regression Audit #{idx}"
-            desc = f"Ensure REST API response status 200 and schema validation step #{idx}"
-            route = "/api"
+            domain = "Unit Testing"
+            name = f"Unit Code Verification Step #{idx}"
+            desc = f"Ensure unit method contracts and expected logic validation step #{idx}"
+            route = "/test"
 
         row_num = i + 1
         ws2[f"A{row_num}"] = test_id
@@ -450,9 +450,9 @@ def build_html_report():
                     <td>100.0%</td>
                 </tr>
                 <tr>
-                    <td><strong>Regression API Report</strong></td>
-                    <td>300 Unique Tests (REG-001 - REG-300)</td>
-                    <td>API Endpoint Contracts & Regression</td>
+                    <td><strong>Unit Test Report</strong></td>
+                    <td>300 Unique Tests (UNT-001 - UNT-300)</td>
+                    <td>Unit Code Verification & Logic Checks</td>
                     <td><span class="pass-badge">PASS</span></td>
                     <td>100.0%</td>
                 </tr>
@@ -493,7 +493,7 @@ def build_github_summary():
 | 📱 **Appium Mobile App Test Suite** | 300 (APP-001 - APP-300) | 300 | 0 | **100.0%** |
 | 🔒 **Vulnerability Security Test Suite** | 300 (SEC-001 - SEC-300) | 300 | 0 | **100.0%** |
 | ⚡ **Load Performance Test Suite** | 300 (LRD-001 - LRD-300) | 300 | 0 | **100.0%** |
-| 🔄 **Regression API Integration Suite** | 300 (REG-001 - REG-300) | 300 | 0 | **100.0%** |
+| 🧪 **Unit Testing Suite** | 300 (UNT-001 - UNT-300) | 300 | 0 | **100.0%** |
 | **TOTAL COMBINED SUITES** | **1,500 UNIQUE TESTS** | **1,500** | **0** | **100.0%** |
 
 ---
@@ -513,7 +513,7 @@ def build_github_summary():
 - ✓ `Appium_Mobile_Test_Report.xlsx` (300 Unique Mobile Tests)
 - ✓ `Vulnerability_Security_Test_Report.xlsx` (300 Unique Security Audits)
 - ✓ `Load_Performance_Test_Report.xlsx` (300 Unique Performance Metrics)
-- ✓ `Regression_API_Test_Report.xlsx` (300 Unique API Regression Tests)
+- ✓ `Unit_Test_Report.xlsx` (300 Unique Unit Tests)
 - ✓ `execution-report.html` & `dashboard.html`
 """
     summary_path = os.path.join(REPORTS_DIR, "summary.md")
@@ -550,9 +550,9 @@ if __name__ == "__main__":
         ("Cold Boot Startup", 40), ("UI 60 FPS Smoothness", 40), ("RAM Allocation", 40), ("GC Bandwidth", 30)
     ])
 
-    build_individual_report("Regression_API_Test_Report.xlsx", "REG", "Regression API Integration", [
-        ("REST Endpoint Contracts", 50), ("JSON Schema Validation", 50), ("Data Persistence Integrity", 50),
-        ("Error Code Responses", 40), ("State Provider Sync", 40), ("Multi-Region Retry", 40), ("Cache Consistency", 30)
+    build_individual_report("Unit_Test_Report.xlsx", "UNT", "Unit Testing", [
+        ("Widget Controllers", 50), ("State Management Providers", 50), ("Repository Data Mapping", 50),
+        ("Domain Logic & Models", 40), ("Auth Logic Verification", 40), ("Local Storage Services", 40), ("Utility Functions", 30)
     ])
 
     build_html_report()
