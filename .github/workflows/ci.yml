@@ -37,7 +37,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [selenium, appium, security, load, unit]
+        include:
+          - suite: selenium
+            file: Selenium_E2E_Test_Report.xlsx
+          - suite: appium
+            file: Appium_Mobile_Test_Report.xlsx
+          - suite: security
+            file: Vulnerability_Security_Test_Report.xlsx
+          - suite: load
+            file: Load_Performance_Test_Report.xlsx
+          - suite: unit
+            file: Unit_Test_Report.xlsx
 
     steps:
       - name: Checkout Code
@@ -61,7 +71,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: report-${{ matrix.suite }}
-          path: automation/reports/*_Report.xlsx
+          path: automation/reports/${{ matrix.file }}
           retention-days: 1
 
   merge-reports:

@@ -553,7 +553,11 @@ def build_individual_report(report_name, prefix, domain_name, modules, cases):
     ws2.column_dimensions["H"].width = 45
 
     wb.save(filename)
-    wb.save(root_filename)
+    try:
+        import shutil
+        shutil.copy(filename, root_filename)
+    except Exception as e:
+        print(f"⚠️ Note: could not copy to root: {e}")
     print(f"✅ Saved Individual Report: {filename}")
 
 def build_1500_master_report_from_files(filename, root_filename, all_cases):
@@ -688,7 +692,11 @@ def build_1500_master_report_from_files(filename, root_filename, all_cases):
     ws2.column_dimensions["H"].width = 45
 
     wb.save(filename)
-    wb.save(root_filename)
+    try:
+        import shutil
+        shutil.copy(filename, root_filename)
+    except Exception as e:
+        print(f"⚠️ Note: could not copy to root: {e}")
     print(f"✅ Saved Master 1,500 Report: {filename}")
 
 # =============================================================================
